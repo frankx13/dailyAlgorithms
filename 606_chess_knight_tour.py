@@ -30,7 +30,7 @@
 #       .   .   .   .   .   .   .   .
 #       1   2   3   4   5   6   7   8
 #
-# Initial knight's position will be in H1 - case 57 (this will be the starting point 0 with x = 0 and y = 0)
+# Initial knight's position will be in H1 - case 57 (this will be the starting point 0 with x = 1 and y = 1)
 
 def create_2d_chessboard():
     """Create a 2 dimensional dictionary holding the chessboard coordinates for each case."""
@@ -58,34 +58,126 @@ class Knight:
     def __init__(self):
         self.letter = 'h'
         self.number = '57'
-        self.x = 0
-        self.y = 0
+        self.x = 1
+        self.y = 1
         self.cases_already_visited = {}
 
+        self.start_left_possible = False
+        self.start_up_possible = False
+        self.start_right_possible = False
+        self.start_down_possible = False
+
+        self.end_left_possible = False
+        self.end_up_possible = False
+        self.end_right_possible = False
+        self.end_down_possible = False
+
+        self.possible_moves = []
+
     # Move the knight on the chessboard
+    # Left move is x-2, y ||| Upward move is x, y +2 ||| Right move is x+2, y ||| Down move is x, y-2
     def move_knight(self):
         self.check_left_start()
         self.check_up_start()
         self.check_right_start()
         self.check_down_start()
 
+        if self.start_left_possible:
+            movement = 'left'
+            self.check_up_end(movement)
+            self.check_down_end(movement)
+
+        if self.start_up_possible:
+            movement = 'up'
+            self.check_left_end(movement)
+            self.check_right_end(movement)
+
+        if self.start_right_possible:
+            movement = 'right'
+            self.check_left_end(movement)
+            self.check_right_end(movement)
+
+        if self.start_down_possible:
+            movement = 'down'
+            self.check_up_end(movement)
+            self.check_down_end(movement)
+
+        print(self.possible_moves)
+
     # Check if there is enough room to move on a side
     def check_left_start(self):
+        if (self.x - 2) > 0:
+            self.start_left_possible = True
 
     def check_up_start(self):
+        if (self.y + 2) < 8:
+            self.start_up_possible = True
 
     def check_right_start(self):
+        if (self.x + 2) < 8:
+            self.start_right_possible = True
 
     def check_down_start(self):
+        if (self.y - 2) > 0:
+            self.start_down_possible = True
 
-    def check_left_end(self):
+    def check_left_end(self, start_movement):
+        if start_movement == 'up':
+            if (self.y + 1) < 8:
+                self.end_up_possible = True
+                self.possible_moves.append('up_left')
 
-    def check_up_end(self):
+        elif start_movement == 'down':
+            if (self.y - 1) > 0:
+                self.end_down_possible = True
+                self.possible_moves.append('down_left')
 
-    def check_right_end(self):
+        else:
+            print("The knight's tour is finished, or a bug was encountered !")
 
-    def check_down_end(self):
+    def check_up_end(self, start_movement):
+        if start_movement == 'left':
+            if (self.x - 1) > 0:
+                self.end_left_possible = True
+                self.possible_moves.append('left_up')
+
+        elif start_movement == 'right':
+            if (self.x + 1) < 8:
+                self.end_right_possible = True
+                self.possible_moves.append('right_up')
+
+        else:
+            print("The knight's tour is finished, or a bug was encountered !")
+
+    def check_right_end(self, start_movement):
+        if start_movement == 'up':
+            if (self.y + 1) < 8:
+                self.end_up_possible = True
+                self.possible_moves.append('up_right')
+
+        elif start_movement == 'down':
+            if (self.y - 1) > 0:
+                self.end_down_possible = True
+                self.possible_moves.append('down_right')
+
+        else:
+            print("The knight's tour is finished, or a bug was encountered !")
+
+    def check_down_end(self, start_movement):
+        if start_movement == 'left':
+            if (self.x - 1) > 0:
+                self.end_left_possible = True
+                self.possible_moves.append('left_down')
+
+        elif start_movement == 'right':
+            if (self.x + 1) < 8:
+                self.end_right_possible = True
+                self.possible_moves.append('right_down')
+
+        else:
+            print("The knight's tour is finished, or a bug was encountered !")
 
 
 create_2d_chessboard()
-# create_knight()
+my_knight = Knight()
+my_knight.move_knight()
