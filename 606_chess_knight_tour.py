@@ -60,6 +60,8 @@ class Knight:
         self.number = '57'
         self.x = 1
         self.y = 1
+        self.predicted_x = 1
+        self.predicted_y = 1
         self.cases_already_visited = {}
 
         self.start_left_possible = False
@@ -67,69 +69,68 @@ class Knight:
         self.start_right_possible = False
         self.start_down_possible = False
 
+        self.start_possible_moves = []
+
         self.end_left_possible = False
         self.end_up_possible = False
         self.end_right_possible = False
         self.end_down_possible = False
 
         self.possible_moves = []
+        self.counter_possible_moves = 0
+
+        self.possible_moves_predicted_lu = []
+        self.possible_moves_predicted_ld = []
+        self.possible_moves_predicted_ul = []
+        self.possible_moves_predicted_ur = []
+        self.possible_moves_predicted_ru = []
+        self.possible_moves_predicted_rd = []
+        self.possible_moves_predicted_dl = []
+        self.possible_moves_predicted_dr = []
 
     # Move the knight on the chessboard
     # Left move is x-2, y ||| Upward move is x, y +2 ||| Right move is x+2, y ||| Down move is x, y-2
-    def move_knight(self):
+    def scan_possible_movements(self):
         self.check_left_start()
         self.check_up_start()
         self.check_right_start()
         self.check_down_start()
 
-        if self.start_left_possible:
-            movement = 'left'
-            self.check_up_end(movement)
-            self.check_down_end(movement)
-
-        if self.start_up_possible:
-            movement = 'up'
-            self.check_left_end(movement)
-            self.check_right_end(movement)
-
-        if self.start_right_possible:
-            movement = 'right'
-            self.check_up_end(movement)
-            self.check_down_end(movement)
-
-        if self.start_down_possible:
-            movement = 'down'
-            self.check_left_end(movement)
-            self.check_right_end(movement)
+        for possibility in self.start_possible_moves:
+            if possibility == 'left' or possibility == 'right':
+                self.check_up_end(possibility)
+                self.check_down_end(possibility)
+            elif possibility == 'up' or possibility == 'down':
+                self.check_left_end(possibility)
+                self.check_right_end(possibility)
 
         print(self.possible_moves)
+        self.predict_next_move(self.possible_moves)
 
     # Check if there is enough room to move on a side
     def check_left_start(self):
         if (self.x - 2) > 0:
-            self.start_left_possible = True
+            self.start_possible_moves.append('left')
 
     def check_up_start(self):
         if (self.y + 2) < 8:
-            self.start_up_possible = True
+            self.start_possible_moves.append('up')
 
     def check_right_start(self):
         if (self.x + 2) < 8:
-            self.start_right_possible = True
+            self.start_possible_moves.append('right')
 
     def check_down_start(self):
         if (self.y - 2) > 0:
-            self.start_down_possible = True
+            self.start_possible_moves.append('down')
 
     def check_left_end(self, start_movement):
         if start_movement == 'up':
             if (self.x - 1) > 0:
-                self.end_up_possible = True
                 self.possible_moves.append('up_left')
 
         if start_movement == 'down':
             if (self.x - 1) > 0:
-                self.end_down_possible = True
                 self.possible_moves.append('down_left')
 
         else:
@@ -138,12 +139,10 @@ class Knight:
     def check_up_end(self, start_movement):
         if start_movement == 'left':
             if (self.y + 1) < 8:
-                self.end_left_possible = True
                 self.possible_moves.append('left_up')
 
         if start_movement == 'right':
             if (self.y + 1) < 8:
-                self.end_right_possible = True
                 self.possible_moves.append('right_up')
 
         else:
@@ -152,12 +151,10 @@ class Knight:
     def check_right_end(self, start_movement):
         if start_movement == 'up':
             if (self.x + 1) < 8:
-                self.end_up_possible = True
                 self.possible_moves.append('up_right')
 
         if start_movement == 'down':
             if (self.x + 1) < 8:
-                self.end_down_possible = True
                 self.possible_moves.append('down_right')
 
         else:
@@ -166,18 +163,20 @@ class Knight:
     def check_down_end(self, start_movement):
         if start_movement == 'left':
             if (self.y - 1) > 0:
-                self.end_left_possible = True
                 self.possible_moves.append('left_down')
 
         if start_movement == 'right':
             if (self.y - 1) > 0:
-                self.end_right_possible = True
                 self.possible_moves.append('right_down')
 
         else:
             print("The knight's tour is finished, or a bug was encountered !")
 
+    def predict_next_move(self, list_possible_moves):
+        if list_possible_moves.__contains__('left_up'):
+            print('Ok')
+
 
 create_2d_chessboard()
 my_knight = Knight()
-my_knight.move_knight()
+my_knight.scan_possible_movements()
