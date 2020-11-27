@@ -69,24 +69,19 @@ class Knight:
         self.start_right_possible = False
         self.start_down_possible = False
 
-        self.start_possible_moves = []
-
         self.end_left_possible = False
         self.end_up_possible = False
         self.end_right_possible = False
         self.end_down_possible = False
 
+        self.start_possible_moves = []
         self.possible_moves = []
-        self.counter_possible_moves = 0
 
-        self.possible_moves_predicted_lu = []
-        self.possible_moves_predicted_ld = []
-        self.possible_moves_predicted_ul = []
-        self.possible_moves_predicted_ur = []
-        self.possible_moves_predicted_ru = []
-        self.possible_moves_predicted_rd = []
-        self.possible_moves_predicted_dl = []
-        self.possible_moves_predicted_dr = []
+        self.start_predict_moves = []
+        self.possible_moves_predicted_actual = []
+        self.possible_moves_predicted_clone = []
+
+        self.best_predict_move = 'Null'
 
     # Move the knight on the chessboard
     # Left move is x-2, y ||| Upward move is x, y +2 ||| Right move is x+2, y ||| Down move is x, y-2
@@ -104,7 +99,7 @@ class Knight:
                 self.check_left_end(possibility)
                 self.check_right_end(possibility)
 
-        print(self.possible_moves)
+        print(f"First move list : {self.possible_moves}")
         self.predict_next_move(self.possible_moves)
 
     # Check if there is enough room to move on a side
@@ -133,9 +128,6 @@ class Knight:
             if (self.x - 1) > 0:
                 self.possible_moves.append('down_left')
 
-        else:
-            print("The knight's tour is finished, or a bug was encountered !")
-
     def check_up_end(self, start_movement):
         if start_movement == 'left':
             if (self.y + 1) < 8:
@@ -144,9 +136,6 @@ class Knight:
         if start_movement == 'right':
             if (self.y + 1) < 8:
                 self.possible_moves.append('right_up')
-
-        else:
-            print("The knight's tour is finished, or a bug was encountered !")
 
     def check_right_end(self, start_movement):
         if start_movement == 'up':
@@ -157,9 +146,6 @@ class Knight:
             if (self.x + 1) < 8:
                 self.possible_moves.append('down_right')
 
-        else:
-            print("The knight's tour is finished, or a bug was encountered !")
-
     def check_down_end(self, start_movement):
         if start_movement == 'left':
             if (self.y - 1) > 0:
@@ -169,12 +155,130 @@ class Knight:
             if (self.y - 1) > 0:
                 self.possible_moves.append('right_down')
 
-        else:
-            print("The knight's tour is finished, or a bug was encountered !")
-
     def predict_next_move(self, list_possible_moves):
-        if list_possible_moves.__contains__('left_up'):
-            print('Ok')
+        for move in list_possible_moves:
+            self.predicted_x = 0
+            self.predicted_y = 0
+
+            if move == 'left_up':
+                self.predicted_x -= 2
+                self.predicted_y += 1
+
+            elif move == 'left_down':
+                self.predicted_x -= 2
+                self.predicted_y -= 1
+
+            elif move == 'up_left':
+                self.predicted_x -= 1
+                self.predicted_y += 2
+
+            elif move == 'up_right':
+                self.predicted_x += 1
+                self.predicted_y += 2
+
+            elif move == 'right_up':
+                self.predicted_x += 2
+                self.predicted_y += 1
+
+            elif move == 'right_down':
+                self.predicted_x += 2
+                self.predicted_y -= 1
+
+            elif move == 'down_left':
+                self.predicted_x -= 1
+                self.predicted_y -= 2
+
+            elif move == 'down_right':
+                self.predicted_x += 1
+                self.predicted_y -= 2
+
+            if 8 > self.predicted_x > 0 and 8 > self.predicted_y > 0:
+                self.count_predicted_possibilities(move)
+
+        print(self.possible_moves_predicted_actual)
+
+    def count_predicted_possibilities(self, move_tested):
+        self.possible_moves_predicted_clone.clear()
+        self.check_predict_left_start()
+        self.check_predict_up_start()
+        self.check_predict_right_start()
+        self.check_predict_down_start()
+
+        for possibility_predict in self.start_predict_moves:
+            if possibility_predict == 'left' or possibility_predict == 'right':
+                self.check_predict_up_end(possibility_predict)
+                self.check_predict_down_end(possibility_predict)
+            elif possibility_predict == 'up' or possibility_predict == 'down':
+                self.check_predict_left_end(possibility_predict)
+                self.check_predict_right_end(possibility_predict)
+
+        print(f"\nSecond move list for {move_tested} first movement : \n{self.possible_moves_predicted_clone}")
+        actual_list_size = len(self.possible_moves_predicted_actual)
+        actual_clone_size = len(self.possible_moves_predicted_clone)
+        print(f"Actual list is {actual_list_size} long, clone list is {actual_clone_size} long.")
+
+        if actual_list_size == 0 or actual_list_size >= actual_clone_size:
+            self.possible_moves_predicted_actual = self.clone_list(self.possible_moves_predicted_clone)
+            print(f"Actual list is {actual_list_size} long, clone list is {actual_clone_size} long.")
+            self.best_predict_move = move_tested
+            print(f"Best move is {self.best_predict_move} until now.")
+
+    def check_predict_left_start(self):
+        if (self.predicted_x - 2) > 0:
+            self.start_predict_moves.append('left')
+
+    def check_predict_up_start(self):
+        if (self.predicted_y + 2) < 8:
+            self.start_predict_moves.append('up')
+
+    def check_predict_right_start(self):
+        if (self.predicted_x + 2) < 8:
+            self.start_predict_moves.append('right')
+
+    def check_predict_down_start(self):
+        if (self.predicted_y - 2) > 0:
+            self.start_predict_moves.append('down')
+
+    def check_predict_left_end(self, start_movement):
+        if start_movement == 'up':
+            if (self.predicted_x - 1) > 0:
+                self.possible_moves_predicted_clone.append('up_left')
+
+        if start_movement == 'down':
+            if (self.predicted_x - 1) > 0:
+                self.possible_moves_predicted_clone.append('down_left')
+
+    def check_predict_up_end(self, start_movement):
+        if start_movement == 'left':
+            if (self.predicted_y + 1) < 8:
+                self.possible_moves_predicted_clone.append('left_up')
+
+        if start_movement == 'right':
+            if (self.predicted_y + 1) < 8:
+                self.possible_moves_predicted_clone.append('right_up')
+
+    def check_predict_right_end(self, start_movement):
+        if start_movement == 'up':
+            if (self.predicted_x + 1) < 8:
+                self.possible_moves_predicted_clone.append('up_right')
+
+        if start_movement == 'down':
+            if (self.predicted_x + 1) < 8:
+                self.possible_moves_predicted_clone.append('down_right')
+
+    def check_predict_down_end(self, start_movement):
+        if start_movement == 'left':
+            if (self.predicted_y - 1) > 0:
+                self.possible_moves_predicted_clone.append('left_down')
+
+        if start_movement == 'right':
+            if (self.predicted_y - 1) > 0:
+                self.possible_moves_predicted_clone.append('right_down')
+
+    def clone_list(self, list_to_copy):
+        list_copy = []
+        list_copy.extend(list_to_copy)
+        return list_copy
 
 
 create_2d_chessboard()
