@@ -94,13 +94,13 @@ class Knight:
 
         if self.start_right_possible:
             movement = 'right'
-            self.check_left_end(movement)
-            self.check_right_end(movement)
+            self.check_up_end(movement)
+            self.check_down_end(movement)
 
         if self.start_down_possible:
             movement = 'down'
-            self.check_up_end(movement)
-            self.check_down_end(movement)
+            self.check_left_end(movement)
+            self.check_right_end(movement)
 
         print(self.possible_moves)
 
@@ -123,12 +123,12 @@ class Knight:
 
     def check_left_end(self, start_movement):
         if start_movement == 'up':
-            if (self.y + 1) < 8:
+            if (self.x - 1) > 0:
                 self.end_up_possible = True
                 self.possible_moves.append('up_left')
 
-        elif start_movement == 'down':
-            if (self.y - 1) > 0:
+        if start_movement == 'down':
+            if (self.x - 1) > 0:
                 self.end_down_possible = True
                 self.possible_moves.append('down_left')
 
@@ -137,12 +137,12 @@ class Knight:
 
     def check_up_end(self, start_movement):
         if start_movement == 'left':
-            if (self.x - 1) > 0:
+            if (self.y + 1) < 8:
                 self.end_left_possible = True
                 self.possible_moves.append('left_up')
 
-        elif start_movement == 'right':
-            if (self.x + 1) < 8:
+        if start_movement == 'right':
+            if (self.y + 1) < 8:
                 self.end_right_possible = True
                 self.possible_moves.append('right_up')
 
@@ -151,12 +151,12 @@ class Knight:
 
     def check_right_end(self, start_movement):
         if start_movement == 'up':
-            if (self.y + 1) < 8:
+            if (self.x + 1) < 8:
                 self.end_up_possible = True
                 self.possible_moves.append('up_right')
 
-        elif start_movement == 'down':
-            if (self.y - 1) > 0:
+        if start_movement == 'down':
+            if (self.x + 1) < 8:
                 self.end_down_possible = True
                 self.possible_moves.append('down_right')
 
@@ -165,12 +165,12 @@ class Knight:
 
     def check_down_end(self, start_movement):
         if start_movement == 'left':
-            if (self.x - 1) > 0:
+            if (self.y - 1) > 0:
                 self.end_left_possible = True
                 self.possible_moves.append('left_down')
 
-        elif start_movement == 'right':
-            if (self.x + 1) < 8:
+        if start_movement == 'right':
+            if (self.y - 1) > 0:
                 self.end_right_possible = True
                 self.possible_moves.append('right_down')
 
