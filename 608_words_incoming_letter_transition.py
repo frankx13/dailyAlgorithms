@@ -6,3 +6,9 @@
 # given start = "dog", end = "cat", and dictionary = {"dot", "dop", "dat", "cat"}, return ["dog", "dot", "dat",
 # "cat"]. Given start = "dog", end = "cat", and dictionary = {"dot", "tod", "dat", "dar"}, return null as there is no
 # possible transformation from dog to cat.
+
+start = 'dog'
+end = 'cat'
+words = ['dot', 'dop', 'dat', 'cat']
+
+

@@ -62,17 +62,7 @@ class Knight:
         self.y = 1
         self.predicted_x = 1
         self.predicted_y = 1
-        self.cases_already_visited = {}
-
-        self.start_left_possible = False
-        self.start_up_possible = False
-        self.start_right_possible = False
-        self.start_down_possible = False
-
-        self.end_left_possible = False
-        self.end_up_possible = False
-        self.end_right_possible = False
-        self.end_down_possible = False
+        self.cases_already_visited = []
 
         self.start_possible_moves = []
         self.possible_moves = []
@@ -195,7 +185,9 @@ class Knight:
             if 8 > self.predicted_x > 0 and 8 > self.predicted_y > 0:
                 self.count_predicted_possibilities(move)
 
-        print(self.possible_moves_predicted_actual)
+        print(f"\nPossible moves on the second move: \n{self.possible_moves_predicted_actual} -------- with the"
+              f" {self.best_predict_move} move.")
+        self.start_moving_knight()
 
     def count_predicted_possibilities(self, move_tested):
         self.possible_moves_predicted_clone.clear()
@@ -279,6 +271,39 @@ class Knight:
         list_copy = []
         list_copy.extend(list_to_copy)
         return list_copy
+
+    def start_moving_knight(self):
+        indexer = 0
+        self.cases_already_visited.append(f"{self.x};{self.y}")
+
+        if self.best_predict_move == 'left_up':
+            self.x, self.y = self.x - 2, self.y + 1
+
+        if self.best_predict_move == 'left_right':
+
+
+        if self.best_predict_move == 'up_left':
+
+
+        if self.best_predict_move == 'up_right':
+
+
+        if self.best_predict_move == 'right_up':
+
+
+        if self.best_predict_move == 'right_down':
+
+
+        if self.best_predict_move == 'down_left':
+
+
+        if self.best_predict_move == 'down_right':
+
+
+        indexer += 1
+        while indexer < 64:
+            self.scan_possible_movements()
+
 
 
 create_2d_chessboard()

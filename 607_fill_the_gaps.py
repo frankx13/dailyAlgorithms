@@ -6,3 +6,24 @@
 # fourth seat. We can consider the cost of a solution to be the sum of the absolute distance each person must move,
 # so that the cost here would be five. Given an input such as the one above, return the lowest possible cost of
 # moving people to remove all gaps.
+
+def organize_sitting(room_plan_list):
+    indexer = 0
+    pointer_holes = []
+    pointer_people = []
+
+    for element in room_plan_list:
+        if element == 0:
+            pointer_holes.append(indexer)
+        elif element == 1:
+            pointer_people.append(indexer)
+        indexer += 1
+
+
+    print(pointer_holes)
+    print(pointer_people)
+
+
+# n = 7, m = 9
+people_and_chairs = [0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1]
+organize_sitting(people_and_chairs)
