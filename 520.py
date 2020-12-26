@@ -8,3 +8,4 @@
 # •	A root node with two children: ((00)(00))
 # •	An unbalanced tree with three consecutive left children: ((((00)0)0)0)
 # Given this representation, determine the depth of the tree.
+
